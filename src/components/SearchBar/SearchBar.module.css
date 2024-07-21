@@ -1,0 +1,29 @@
+.searchBarHeader {
+  width: 100%;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  background-color: rgb(47, 47, 255);
+}
+.searchBarForm {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 10px;
+  width: fit-content;
+  background-color: white;
+  border-radius: 5px;
+}
+.searchBarBtn {
+  margin-right: 10px;
+  /* background-color: aqua; */
+}
+.searchBarInput {
+  width: 300px;
+  height: 40px;
+  /* background-color: aqua; */
+}
+.searchBarBtnIcon {
+  width: 20px;
+  height: 20px;
+}
