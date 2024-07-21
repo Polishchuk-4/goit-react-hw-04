@@ -1,4 +1,5 @@
 import Modal from "react-modal";
+import { format } from "date-fns";
 
 import style from "./ImageModal.module.css";
 
@@ -30,11 +31,18 @@ export default function ImageModal({
   closeModal,
   imgUrl,
   imgDescription,
+  imgLikes,
+  imgCreated,
 }) {
+  const date = new Date(imgCreated);
+  const formattedDate = format(date, "dd.MM.yyyy");
+
   return (
     <Modal isOpen={isOpen} onRequestClose={closeModal} style={customStyles}>
       <img src={imgUrl} alt={imgDescription} className={style.img} />
-      <p className={style.modalText}>text</p>
+      <p className={style.modalText}>
+        Likes: {imgLikes} || Created: {formattedDate}
+      </p>
     </Modal>
   );
 }

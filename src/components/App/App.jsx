@@ -5,7 +5,7 @@ import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import LoadMoreBtn from "../LoadMoreBtn/LoadMoreBtn";
 import Modal from "../ImageModal/ImageModal";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import fetchImagesWithTopic from "../../images-api";
 
 import style from "./App.module.css";
@@ -19,39 +19,42 @@ function App() {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [modalImg, setModalImg] = useState("");
 
-  const handleSearch = async (topic) => {
-    try {
-      setError(false);
-      setLoading(true);
-      setGallery([]);
-      setPage(1);
-      setPrevTopic(topic);
-
-      const response = await fetchImagesWithTopic(topic, page);
-
-      setGallery(response);
-
-      if (response.length === 0) {
-        setError(true);
+  useEffect(() => {
+    async function getGallery() {
+      if (prevTopic === "") {
+        return;
       }
-    } catch (error) {
-      setError(true);
-    } finally {
-      setLoading(false);
+      try {
+        setError(false);
+        setLoading(true);
+        setGallery([]);
+
+        const response = await fetchImagesWithTopic(prevTopic, page);
+
+        setGallery([...gallery, ...response]);
+
+        if (response.length === 0) {
+          setError(true);
+        }
+      } catch (error) {
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
     }
-    console.log(topic);
+    getGallery();
+  }, [page, prevTopic]);
+
+  const handleSearch = async (topic) => {
+    setError(false);
+    setLoading(false);
+    setPage(1);
+    setGallery([]);
+    setPrevTopic(topic);
   };
 
   const handleLoadMore = async () => {
-    try {
-      setPage((page) => page + 1);
-      const response = await fetchImagesWithTopic(prevTopic, page);
-      setGallery([...gallery, ...response]);
-    } catch (er) {
-      setError(true);
-      console.log(er);
-    }
-    console.log(page);
+    setPage((page) => page + 1);
   };
 
   function openModal(img) {
@@ -76,9 +79,10 @@ function App() {
           closeModal={closeModal}
           imgUrl={modalImg.urls.regular}
           imgDecription={modalImg.alt_description}
+          imgLikes={modalImg.likes}
+          imgCreated={modalImg.created_at}
         />
       )}
-      {console.log(modalIsOpen)}
     </div>
   );
 }
